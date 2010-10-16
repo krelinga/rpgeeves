@@ -3,6 +3,12 @@
     <title>Dice!</title>
   </head>
   <body>
-    <p>Template Dice!</p>
+    {% if d %}
+    <div>{{ d }}</div>
+    {% endif %}
+    <form action="/dice" method="get">
+      <div><input type="text" name="d" /></div>
+      <div><input type="submit" value="Roll!" /></div>
+    </form>
   </body>
 </html>
