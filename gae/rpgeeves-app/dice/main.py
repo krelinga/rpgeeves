@@ -9,7 +9,8 @@ from google.appengine.ext.webapp import util
 
 class DiceHandler(webapp.RequestHandler):
   def get(self):
-    self.response.out.write('Dice!')
+    tpl_path = os.path.join(os.path.dirname(__file__), 'dice.html')
+    self.response.out.write(template.render(tpl_path, {}))
 
 
 def main():
