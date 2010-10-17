@@ -41,7 +41,7 @@ def __SplitSpecs(expression):
   cleaned = __Clean(expression)
   if len(cleaned) == 0:
     return []
-  spec_re = r'[+-]\d+(?:d\d+)?'
+  spec_re = r'[+-](?:\d+)?(?:d\d+)?'
   if not re.match('(' + spec_re + ')+$', cleaned):
     raise ParseError('couldn\'t parse "%s"' % cleaned)
   return re.findall(spec_re, cleaned)
@@ -60,7 +60,7 @@ def Evaluate(expression):
   output = []
   total_parts = 0
   for spec in __SplitSpecs(expression):
-    match = re.match(r'([+-])(\d+)(?:d(\d+))?', spec)
+    match = re.match(r'([+-])(\d+)?(?:d(\d+))?', spec)
     assert match
     groups = match.groups()
     sign = groups[0]
@@ -69,12 +69,17 @@ def Evaluate(expression):
       total_parts += 1
       if total_parts >= MAX_PARTS:
         raise ParseError('Please use less than %d parts' % MAX_PARTS)
+      if groups[1] is None:
+        raise ParseError('Couldn\'t parse "%s"' % spec)
       num = int(groups[1])
       output.append(__EntryForConstant(sign, num))
     else:
       # This is a dice expression
       sign = groups[0]
-      dice_cnt = int(groups[1])
+      if groups[1] is None:
+        dice_cnt = 1
+      else:
+        dice_cnt = int(groups[1])
       dice_sides = int(groups[2])
       if dice_sides < 1:
         raise ParseError('zero-sided dice are not allowed')

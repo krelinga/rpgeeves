@@ -40,6 +40,13 @@ class TestExpression(unittest.TestCase):
   def test_MaxDice(self):
     Evaluate('9999d10')
 
+  def test_DontForceNumber(self):
+    no_number = Evaluate('d8')
+    self.assertEqual(1, len(no_number))
+
+  def test_ParseFailureOnSignOnly(self):
+    self.assertRaises(ParseError, Evaluate, '+')
+
 
 if __name__ == '__main__':
     unittest.main()
