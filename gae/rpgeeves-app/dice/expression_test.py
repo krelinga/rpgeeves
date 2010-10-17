@@ -34,6 +34,12 @@ class TestExpression(unittest.TestCase):
   def test_ZeroSidedDice(self):
     self.assertRaises(ParseError, Evaluate, '25d0')
 
+  def test_TooManyDice(self):
+    self.assertRaises(ParseError, Evaluate, '10000d10')
+
+  def test_MaxDice(self):
+    Evaluate('9999d10')
+
 
 if __name__ == '__main__':
     unittest.main()

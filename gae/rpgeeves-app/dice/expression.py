@@ -56,7 +56,9 @@ def __EntryForDice(sign, sides):
 
 
 def Evaluate(expression):
+  MAX_PARTS = 10 * 1000
   output = []
+  total_parts = 0
   for spec in __SplitSpecs(expression):
     match = re.match(r'([+-])(\d+)(?:d(\d+))?', spec)
     assert match
@@ -64,6 +66,9 @@ def Evaluate(expression):
     sign = groups[0]
     if not groups[2]:
       # This is a constant-valued expression
+      total_parts += 1
+      if total_parts >= MAX_PARTS:
+        raise ParseError('Please use less than %d parts' % MAX_PARTS)
       num = int(groups[1])
       output.append(__EntryForConstant(sign, num))
     else:
@@ -74,6 +79,9 @@ def Evaluate(expression):
       if dice_sides < 1:
         raise ParseError('zero-sided dice are not allowed')
       for i in xrange(dice_cnt):
+        total_parts += 1
+        if total_parts >= MAX_PARTS:
+          raise ParseError('Please use less than %d parts' % MAX_PARTS)
         output.append(__EntryForDice(sign, dice_sides))
   return output
 
