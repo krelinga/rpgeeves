@@ -32,8 +32,16 @@ class ParseError(StandardError):
 
 
 def __Clean(expression):
+  comment_re = r'\([^)]*\)'
+  comments = re.findall(comment_re, expression)
+  # save comments so that white space survives sanitization
+  for i in xrange(len(comments)):
+    expression = expression.replace(comments[i], 'comment_%d' % i, 1)
   cleaned = expression.lower().translate(string.maketrans('', ''),
                                          string.whitespace)
+  # restore old comments
+  for i in xrange(len(comments)):
+    cleaned = cleaned.replace('comment_%d' % i, comments[i], 1)
   if len(cleaned) == 0:
     return ''
   if not cleaned.startswith('-') and not cleaned.startswith('+'):
@@ -45,18 +53,25 @@ def __SplitSpecs(expression):
   cleaned = __Clean(expression)
   if len(cleaned) == 0:
     return []
-  spec_re = r'[+-](?:\d+)?(?:d\d+)?'
+  spec_re = r'[+\-](?:\d+)?(?:d\d+)?(?:\([^)]*\))?'
   if not re.match('(' + spec_re + ')+$', cleaned):
     raise ParseError('couldn\'t parse "%s"' % cleaned)
   return re.findall(spec_re, cleaned)
 
 
-def __EntryForConstant(sign, num):
-  return Entry(int('%s%d' % (sign, num)), "constant")
+def __EntryForConstant(sign, num, comment):
+  if comment is None:
+    comment = ''
+  return Entry(int('%s%d' % (sign, num)), comment)
 
 
-def __EntryForDice(sign, sides):
-  return Entry(int('%s%d' % (sign, random.randint(1, sides))), '1d%d' % sides,
+def __EntryForDice(sign, sides, comment):
+  if comment is not None:
+    comment = ' ' + comment
+  else:
+    comment = ''
+  return Entry(int('%s%d' % (sign, random.randint(1, sides))),
+               '1d%d%s' % (sides, comment),
                sides)
 
 
@@ -65,10 +80,11 @@ def Evaluate(expression):
   output = []
   total_parts = 0
   for spec in __SplitSpecs(expression):
-    match = re.match(r'([+-])(\d+)?(?:d(\d+))?', spec)
+    match = re.match(r'([+\-])(\d+)?(?:d(\d+))?(?:\(([^)]*)\))?', spec)
     assert match
     groups = match.groups()
     sign = groups[0]
+    comment = groups[3]
     if not groups[2]:
       # This is a constant-valued expression
       total_parts += 1
@@ -77,7 +93,7 @@ def Evaluate(expression):
       if groups[1] is None:
         raise ParseError('Couldn\'t parse "%s"' % spec)
       num = int(groups[1])
-      output.append(__EntryForConstant(sign, num))
+      output.append(__EntryForConstant(sign, num, comment))
     else:
       # This is a dice expression
       sign = groups[0]
@@ -92,6 +108,6 @@ def Evaluate(expression):
         total_parts += 1
         if total_parts >= MAX_PARTS:
           raise ParseError('Please use less than %d parts' % MAX_PARTS)
-        output.append(__EntryForDice(sign, dice_sides))
+        output.append(__EntryForDice(sign, dice_sides, comment))
   return output
 

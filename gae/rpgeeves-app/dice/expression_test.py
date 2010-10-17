@@ -52,6 +52,17 @@ class TestExpression(unittest.TestCase):
   def test_ParseFailureOnSignOnly(self):
     self.assertRaises(ParseError, Evaluate, '+')
 
+  def test_ReadComments(self):
+    constant = Evaluate('1 (this is a comment)')
+    self.assertEqual(1, int(constant[0]))
+    self.assertEqual(None, constant[0].sides())
+    self.assertNotEqual(-1, str(constant[0]).find('this is a comment'))
+
+    dice = Evaluate('1d3 (this is a comment)')
+    self.assertTrue(int(dice[0]) in (1, 2, 3))
+    self.assertEqual(3, dice[0].sides())
+    self.assertNotEqual(-1, str(dice[0]).find('this is a comment'))
+
 
 if __name__ == '__main__':
     unittest.main()
