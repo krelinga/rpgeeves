@@ -3,12 +3,19 @@
     <title>Dice!</title>
   </head>
   <body>
-    {% if d %}
-    <div>{{ d }}</div>
-    {% endif %}
     <form action="/dice" method="get">
-      <div><input type="text" name="d" /></div>
+      <div><input type="text" name="d" value="{{ d }}" /></div>
       <div><input type="submit" value="Roll!" /></div>
     </form>
+    {% if total %}
+    <div>{{ total }}</div>
+    <hr />
+    {% for entry in entries %}
+    <div>{{ entry }}</div>
+    {% endfor %}
+    {% endif %}
+    {% if error %}
+    <div>{{ error }}</div>
+    {% endif %}
   </body>
 </html>
