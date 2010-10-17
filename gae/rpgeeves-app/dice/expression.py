@@ -71,6 +71,8 @@ def Evaluate(expression):
       sign = groups[0]
       dice_cnt = int(groups[1])
       dice_sides = int(groups[2])
+      if dice_sides < 1:
+        raise ParseError('zero-sided dice are not allowed')
       for i in xrange(dice_cnt):
         output.append(__EntryForDice(sign, dice_sides))
   return output

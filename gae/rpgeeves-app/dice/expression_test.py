@@ -31,6 +31,9 @@ class TestExpression(unittest.TestCase):
     mix = Evaluate(' 3d8 + 2d4 - 1d6 + 4')
     self.assertEqual(7, len(mix))
 
+  def test_ZeroSidedDice(self):
+    self.assertRaises(ParseError, Evaluate, '25d0')
+
 
 if __name__ == '__main__':
     unittest.main()
