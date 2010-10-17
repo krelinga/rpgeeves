@@ -17,7 +17,11 @@ class Entry:
     else:
       sign = '-'
     num = abs(self.__value)
-    return '%s%d (%s)' % (sign, num, self.__description)
+    if len(self.__description) > 0:
+      desc_str = ' (%s)' % self.__description
+    else:
+      desc_str = ''
+    return '%s%d%s' % (sign, num, desc_str)
 
   def __int__(self):
     return self.__value

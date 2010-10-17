@@ -63,6 +63,12 @@ class TestExpression(unittest.TestCase):
     self.assertEqual(3, dice[0].sides())
     self.assertNotEqual(-1, str(dice[0]).find('this is a comment'))
 
+  def test_NoComment(self):
+    self.assertEqual(-1, str(Evaluate('1')[0]).find('('))
+
+  def test_EmptyComment(self):
+    self.assertEqual(-1, str(Evaluate('1()')[0]).find('('))
+
 
 if __name__ == '__main__':
     unittest.main()
