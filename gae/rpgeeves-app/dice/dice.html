@@ -4,8 +4,10 @@
   </head>
   <body>
     <form action="/dice" method="get">
-      <div><input type="text" name="d" value="{{ d }}" /></div>
-      <div><input type="submit" value="Roll!" /></div>
+      <div>
+        <input type="text" name="d" value="{{ d }}" />
+        <input type="submit" value="Roll!" />
+      </div>
     </form>
     {% if total %}
     <div>{{ total }}</div>
