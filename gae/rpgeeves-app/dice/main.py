@@ -10,13 +10,21 @@ import dice.expression as expression
 
 
 class DiceHandler(webapp.RequestHandler):
+  def __EntryHtml(self, entry):
+    if entry.sides() == 20 and int(entry) == 1:
+      return '<font color="red" size="+1"><b>%s</b></font>' % str(entry)
+    elif entry.sides() == 20 and int(entry) == 20:
+      return '<font color="green" size="+1"><b>%s</b></font>' % str(entry)
+    else:
+      return str(entry)
+
   def get(self):
     d = self.request.get('d').encode('ascii')
     tpl_dict = {'d' : d}
     try:
       entries = expression.Evaluate(d)
       tpl_dict['total']  = sum([int(x) for x in entries])
-      tpl_dict['entries'] = [str(x) for x in entries]
+      tpl_dict['entries'] = [self.__EntryHtml(x) for x in entries]
     except expression.ParseError, e:
       tpl_dict['error'] = str(e)
 
