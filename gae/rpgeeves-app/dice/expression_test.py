@@ -16,16 +16,20 @@ class TestExpression(unittest.TestCase):
   def test_SingleConstant(self):
     no_sign = Evaluate('1')
     self.assertEqual(1, int(no_sign[0]))
+    self.assertEqual(None, no_sign[0].sides())
 
     sign = Evaluate('-1')
     self.assertEqual(-1, int(sign[0]))
+    self.assertEqual(None, sign[0].sides())
 
   def test_SingleDice(self):
     no_sign = Evaluate('1d3')
     self.assertTrue(int(no_sign[0]) in [1, 2, 3])
+    self.assertEqual(3, no_sign[0].sides())
 
     sign = Evaluate('-1d3')
     self.assertTrue(int(sign[0]) in [-1, -2, -3])
+    self.assertEqual(3, sign[0].sides())
 
   def test_Mix(self):
     mix = Evaluate(' 3d8 + 2d4 - 1d6 + 4')
@@ -43,6 +47,7 @@ class TestExpression(unittest.TestCase):
   def test_DontForceNumber(self):
     no_number = Evaluate('d8')
     self.assertEqual(1, len(no_number))
+    self.assertEqual(8, no_number[0].sides())
 
   def test_ParseFailureOnSignOnly(self):
     self.assertRaises(ParseError, Evaluate, '+')

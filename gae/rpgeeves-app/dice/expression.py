@@ -6,9 +6,10 @@ import random
 import re
 
 class Entry:
-  def __init__(self, value, description):
+  def __init__(self, value, description, sides=None):
     self.__value = value
     self.__description = description
+    self.__sides = sides
 
   def __str__(self):
     if self.__value >= 0:
@@ -20,6 +21,9 @@ class Entry:
 
   def __int__(self):
     return self.__value
+
+  def sides(self):
+    return self.__sides
 
 
 class ParseError(StandardError):
@@ -52,7 +56,8 @@ def __EntryForConstant(sign, num):
 
 
 def __EntryForDice(sign, sides):
-  return Entry(int('%s%d' % (sign, random.randint(1, sides))), '1d%d' % sides)
+  return Entry(int('%s%d' % (sign, random.randint(1, sides))), '1d%d' % sides,
+               sides)
 
 
 def Evaluate(expression):
