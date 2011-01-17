@@ -63,6 +63,12 @@ class TestExpression(unittest.TestCase):
     self.assertEqual(3, dice[0].sides())
     self.assertNotEqual(-1, str(dice[0]).find('this is a comment'))
 
+  def test_MultipleComments(self):
+    dice = Evaluate('1d3 (first comment) + 1d4 (second comment)')
+    self.assertEqual(2, len(dice))
+    self.assertNotEqual(-1, str(dice[0]).find('first comment'))
+    self.assertNotEqual(-1, str(dice[1]).find('second comment'))
+
   def test_NoComment(self):
     self.assertEqual(-1, str(Evaluate('1')[0]).find('('))
 
