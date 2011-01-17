@@ -75,6 +75,9 @@ class TestExpression(unittest.TestCase):
   def test_EmptyComment(self):
     self.assertEqual(-1, str(Evaluate('1()')[0]).find('('))
 
+  def test_StrayCloseComment.(self):
+    self.assertRaises(ParseError, Evaluate, '1 (this is a ) comment)')
+
 
 if __name__ == '__main__':
     unittest.main()
