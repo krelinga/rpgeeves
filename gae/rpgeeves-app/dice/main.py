@@ -22,7 +22,7 @@ class DiceHandler(webapp.RequestHandler):
     d = self.request.get('d').encode('ascii')
     tpl_dict = {'d' : d}
     try:
-      entries = expression.Evaluate(d)
+      entries = expression.Evaluator().Evaluate(d)
       tpl_dict['total']  = sum([int(x) for x in entries])
       tpl_dict['entries'] = [self.__EntryHtml(x) for x in entries]
     except expression.ParseError, e:
