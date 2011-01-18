@@ -75,8 +75,32 @@ class TestExpression(unittest.TestCase):
   def test_EmptyComment(self):
     self.assertEqual(-1, str(Evaluate('1()')[0]).find('('))
 
-  def test_StrayCloseComment.(self):
+  def test_StrayCloseComment(self):
     self.assertRaises(ParseError, Evaluate, '1 (this is a ) comment)')
+
+  def test_ColorSpecs(self):
+    dice = Evaluate('1d1 <red=1>')
+    self.assertEqual(1, len(dice))
+    self.assertEqual(1, int(dice[0]))
+    self.assertEqual('red', dice[0].color())
+
+    dice = Evaluate('1d1 <red=2>')
+    self.assertEqual(None, dice[0].color())
+
+    dice = Evaluate('1d1 <red=1> + 2d1<blue=1>')
+    self.assertEqual(3, len(dice))
+    self.assertEqual('red', dice[0].color())
+    self.assertEqual('blue', dice[1].color())
+    self.assertEqual('blue', dice[2].color())
+
+  def test_UnknownColor(self):
+    self.assertRaises(ParseError, Evaluate, '1d1 <asdf=2>')
+
+  def test_ConstantWithColor(self):
+    self.assertRaises(ParseError, Evaluate, '1 <red=1>')
+
+  def test_ColorWithStrayClose(self):
+    self.assertRaises(ParseError, Evaluate, '1d1 <red=1>>')
 
 
 if __name__ == '__main__':
