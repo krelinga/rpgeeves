@@ -117,6 +117,15 @@ class TestExpression(unittest.TestCase):
     self.assertEqual(None, dice[3].color())
     self.assertEqual('green', dice[4].color())
 
+    self.__e = Evaluator(MockRandom(1, 6, 10, 5, 20))
+    self.assertEqual(5, len(dice))
+    self.assertEqual('red', dice[0].color())
+    self.assertEqual('blue', dice[1].color())
+    self.assertEqual(None, dice[3].color())
+    self.assertEqual('blue', dice[2].color())
+    self.assertEqual('green', dice[4].color())
+
+
   def test_UnknownColor(self):
     self.assertRaises(ParseError, self.__e.Evaluate, '1d1 <asdf=2>')
 
