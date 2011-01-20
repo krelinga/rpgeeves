@@ -60,8 +60,8 @@ class ColorSpec:
       if '-' in val_range:
         array_range = val_range.split('-')
         assert len(array_range) == 2
-        range_start = array_range[0]
-        range_end = array_range[1]
+        range_start = int(array_range[0])
+        range_end = int(array_range[1])
       else:
         range_start = int(val_range)
         range_end = range_start

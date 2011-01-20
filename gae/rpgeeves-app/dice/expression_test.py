@@ -5,6 +5,16 @@ import unittest
 from expression import Evaluator
 from expression import ParseError
 
+class MockRandom:
+  def __init__(self, *args):
+    self.__current = 0
+    self.__args = args
+
+  def __call__(self, x, y):
+    to_return = self.__args[self.__current]
+    self.__current += 1
+    return to_return
+
 
 class TestExpression(unittest.TestCase):
   def setUp(self):
@@ -106,6 +116,10 @@ class TestExpression(unittest.TestCase):
 
   def test_ColorWithStrayClose(self):
     self.assertRaises(ParseError, self.__e.Evaluate, '1d1 <red=1>>')
+
+  def test_OverlappingColorRanges(self):
+    self.__e = Evaluator(MockRandom(1, 2))
+    self.assertRaises(ParseError, self.__e.Evaluate, '2d10 <red=1-2 green=2-3>')
 
 
 if __name__ == '__main__':
