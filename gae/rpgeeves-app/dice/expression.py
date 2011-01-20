@@ -143,7 +143,7 @@ class Evaluator:
       COUNT_RE = r'(?P<count>\d+)?'
       DICE_RE = r'(?:d(?P<dice>\d+))?'
       COMMENT_RE = r'(?:\((?P<comment>[^)]*)\))?'
-      COLOR_RE = r'(?:<(?P<color>[^>]*)>)?'
+      COLOR_RE = r'(?P<color_outer><(?P<color>[^>]*)>)?'
       match = re.match(SIGN_RE + COUNT_RE + DICE_RE + COMMENT_RE + COLOR_RE,
       spec)
       assert match
@@ -174,7 +174,7 @@ class Evaluator:
         color_spec = groups['color']
         if color_spec:
           color_spec = ColorSpec(color_spec)
-        elif dice_sides == 20:
+        elif dice_sides == 20 and not groups['color_outer']:
           # Backward-compatible behavior for d20s.
           color_spec = ColorSpec('red=1green=20')
         for i in xrange(dice_cnt):

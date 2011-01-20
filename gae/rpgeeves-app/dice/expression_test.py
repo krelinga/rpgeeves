@@ -145,6 +145,14 @@ class TestExpression(unittest.TestCase):
     self.assertEqual('red', dice[0].color())
     self.assertEqual('green', dice[1].color())
 
+  def test_D20NoColorRanges(self):
+    self.__e = Evaluator(MockRandom(1, 20))
+    dice = self.__e.Evaluate('2d20 <>')
+    self.assertEqual(2, len(dice))
+    self.assertEqual(None, dice[0].color())
+    self.assertEqual(None, dice[1].color())
+
+
 if __name__ == '__main__':
     unittest.main()
 
