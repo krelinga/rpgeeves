@@ -125,7 +125,6 @@ class TestExpression(unittest.TestCase):
     self.assertEqual('blue', dice[2].color())
     self.assertEqual('green', dice[4].color())
 
-
   def test_UnknownColor(self):
     self.assertRaises(ParseError, self.__e.Evaluate, '1d1 <asdf=2>')
 
