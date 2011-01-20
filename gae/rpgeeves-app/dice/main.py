@@ -11,10 +11,9 @@ import dice.expression as expression
 
 class DiceHandler(webapp.RequestHandler):
   def __EntryHtml(self, entry):
-    if entry.sides() == 20 and int(entry) == 1:
-      return '<font color="red" size="+1"><b>%s</b></font>' % str(entry)
-    elif entry.sides() == 20 and int(entry) == 20:
-      return '<font color="green" size="+1"><b>%s</b></font>' % str(entry)
+    if entry.color():
+      return '<font color="%s" size="+1"><b>%s</b></font>' % (entry.color(),
+                                                              str(entry))
     else:
       return str(entry)
 
