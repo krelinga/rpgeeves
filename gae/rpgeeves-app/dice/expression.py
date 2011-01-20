@@ -174,6 +174,9 @@ class Evaluator:
         color_spec = groups['color']
         if color_spec:
           color_spec = ColorSpec(color_spec)
+        elif dice_sides == 20:
+          # Backward-compatible behavior for d20s.
+          color_spec = ColorSpec('red=1green=20')
         for i in xrange(dice_cnt):
           total_parts += 1
           if total_parts >= MAX_PARTS:

@@ -139,6 +139,12 @@ class TestExpression(unittest.TestCase):
     self.__e = Evaluator(MockRandom(1, 2))
     self.assertRaises(ParseError, self.__e.Evaluate, '2d10 <red=1-2 green=2-3>')
 
+  def test_D20DefaultColorRanges(self):
+    self.__e = Evaluator(MockRandom(1, 20))
+    dice = self.__e.Evaluate('2d20')
+    self.assertEqual(2, len(dice))
+    self.assertEqual('red', dice[0].color())
+    self.assertEqual('green', dice[1].color())
 
 if __name__ == '__main__':
     unittest.main()
