@@ -45,14 +45,20 @@ class ParseError(StandardError):
 
 
 class ColorSpec:
-  @staticmethod
-  def __ColorRangeTester(value, range_start, range_end, color):
-    if value >= range_start and value <= range_end:
-      return color
-    return None
+  class __Range:
+    def __init__(self, start, end, color):
+      assert start <= end
+      self.__start = start
+      self.__end = end
+      self.__color = color
+
+    def GetColor(self, value):
+      if self.__start <= value and self.__end >= value:
+        return self.__color
+      return None
 
   def __init__(self, spec_str):
-    self.__tests = []
+    self.__ranges = []
     groups = re.findall(r'(?:([a-z]+)=(\d+(?:-\d+)?))', spec_str)
     for (color, val_range) in groups:
       if color not in ('red', 'green', 'blue', 'yellow'):
@@ -65,17 +71,16 @@ class ColorSpec:
       else:
         range_start = int(val_range)
         range_end = range_start
-      test = lambda x: ColorSpec.__ColorRangeTester(x, range_start, range_end, color)
-      self.__tests.append(test)
+      self.__ranges.append(ColorSpec.__Range(range_start, range_end, color))
 
   def ColorForValue(self, value):
-    matches = [x(value) for x in self.__tests if x(value)]
+    matches = [x.GetColor(value) for x in self.__ranges if x.GetColor(value)]
     if len(matches) == 0:
       return None
     elif len(matches) == 1:
       return matches[0]
     else:
-      raise ParseError("Color ranges should be non-overlapping.")
+      raise ParseError("Color ranges should be non-overlapping. found %s" % matches)
 
 
 class Evaluator:
