@@ -11,7 +11,8 @@ import vars.store as store
 
 class VarsHandler(webapp.RequestHandler):
   def __HandleNew(self):
-    pass
+    tpl_path = os.path.join(os.path.dirname(__file__), 'var_create.html')
+    self.response.out.write(template.render(tpl_path, {}))
 
   def __HandleList(self):
     tpl_path = os.path.join(os.path.dirname(__file__), 'var_list.html')
@@ -19,7 +20,7 @@ class VarsHandler(webapp.RequestHandler):
     tpl_dict = {'vars' : [store.DiceVar(owner=owner, name="foo", value="1d6"),
                           store.DiceVar(owner=owner, name="bar", value="1d20")]}
     self.response.out.write(template.render(tpl_path, tpl_dict))
-    pass
+
   def get(self):
     # make sure the user is logged in
     user = users.get_current_user()
