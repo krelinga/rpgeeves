@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <title>Variables</title>
+  </head>
+<body>
+  <a href="/vars?action=new">New</a>
+  <table>
+    <th>
+      <td>Name</td>
+      <td>Value</td>
+    </th>
+    {% for var in vars %}
+    <tr>
+      <td><a href="/vars?action=edit&var={{var.name}}">edit</a></td>
+      <td>{{var.name}}</td>
+      <td>{{var.value}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
