@@ -3,8 +3,9 @@
   <title>New Variable</title>
 </head>
 <body>
-  <form action="/vars" method="post">
+  <form action="/vars" method="get">
     <div>Name:</div>
+    <input type="text" name="action" value="new_submit" style="display:none" />
     <input type="text" name="name" value="" />
     <div>Value:</div>
     <input type="text" name="value" value="" />
