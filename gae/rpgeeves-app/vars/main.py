@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import os
+import string
 
 from google.appengine.api import users
 from google.appengine.ext import webapp
@@ -24,6 +25,12 @@ class VarsHandler(webapp.RequestHandler):
     
   def __RequestVar(self, name):
     return self.request.get(name).encode('ascii')
+
+  def __CheckName(self, name):
+    name = name.translate(string.maketrans('', ''), '_')
+    if not name.isalnum():
+      return '%s contains other than letters, numbers, and underscores' % name
+    return None
 
   def __CheckParse(self, value):
     try:
@@ -50,23 +57,17 @@ class VarsHandler(webapp.RequestHandler):
     return None
 
   def __HandleCreateSubmit(self):
-    existing_error = self.__CheckForExistingVariable(self.__RequestVar('name'))
-    if existing_error:
-      # render error page
-      tpl_dict = {'error' : existing_error,
-                  'name' : self.__RequestVar('name'),
-                  'value' : self.__RequestVar('value')}
-      self.__HandleCreate(tpl_dict)
-      return
-
-    parse_error = self.__CheckParse(self.__RequestVar('value'))
-    if parse_error:
-      # render error page
-      tpl_dict = {'error' : parse_error,
-                  'name' : self.__RequestVar('name'),
-                  'value' : self.__RequestVar('value')}
-      self.__HandleCreate(tpl_dict)
-      return
+    errors = (self.__CheckParse(self.__RequestVar('value')),
+              self.__CheckForExistingVariable(self.__RequestVar('name')),
+              self.__CheckName(self.__RequestVar('name')))
+    for error in errors:
+      if error:
+        # render error page
+        tpl_dict = {'error' : error,
+                    'name' : self.__RequestVar('name'),
+                    'value' : self.__RequestVar('value')}
+        self.__HandleCreate(tpl_dict)
+        return
 
     new_var = store.DiceVar(owner=self.__user,
                             name=self.__RequestVar('name'),
@@ -81,7 +82,7 @@ class VarsHandler(webapp.RequestHandler):
     query = store.DiceVar.all()
     query.filter('owner =', owner)
     query.order('name')
-    results = query.fetch(1)
+    results = query.fetch(10000000)
     tpl_dict['vars'] = results
     self.response.out.write(template.render(tpl_path, tpl_dict))
 
@@ -106,47 +107,43 @@ class VarsHandler(webapp.RequestHandler):
       tpl_dict['original_name'] = results[0].name
     self.response.out.write(template.render(tpl_path, tpl_dict))
 
+  def __CheckVariableExists(self, name):
+    query = store.DiceVar.all()
+    query.filter('owner =', self.__user)
+    query.filter('name =', name)
+    results = query.fetch(1)
+    if len(results) != 1:
+      return 'unknown variable %s' % name
+    return None
+
   def __HandleEditSubmit(self):
     original_name = self.__RequestVar('original_name')
     name = self.__RequestVar('name')
+
+    errors = [self.__CheckParse(self.__RequestVar('value')),
+              self.__CheckName(name)]
+
     query = store.DiceVar.all()
     query.filter('owner =', self.__user)
     query.filter('name =', original_name)
     results = query.fetch(1)
     if len(results) != 1:
-      # render error page
-      tpl_dict = {'error' : 'Unknown variable %s' % original_name,
-                  'name' : name,
-                  'original_name' : original_name,
-                  'value' : self.__RequestVar('value')}
-      self.__HandleEdit(tpl_dict)
-      return
-
-    results[0].name = name
-    results[0].value = self.__RequestVar('value')
-
+      errors.append('unknown variable %s' % name)
     if original_name != name:
-      existing_error = self.__CheckForExistingVariable(name)
-      if existing_error:
+      errors.append(self.__CheckForExistingVariable(name))
+
+    for error in errors:
+      if error:
         # render error page
-        tpl_dict = {'error' : existing_error,
+        tpl_dict = {'error' : error,
                     'name' : name,
                     'original_name' : original_name,
                     'value' : self.__RequestVar('value')}
         self.__HandleEdit(tpl_dict)
         return
 
-    # check for parse error
-    parse_error = self.__CheckParse(self.__RequestVar('value'))
-    if parse_error:
-      # render error page
-      tpl_dict = {'error' : parse_error,
-                  'original_name' : original_name,
-                  'name' : self.__RequestVar('name'),
-                  'value' : self.__RequestVar('value')}
-      self.__HandleEdit(tpl_dict)
-      return
-
+    results[0].name = name
+    results[0].value = self.__RequestVar('value')
     results[0].put()
     self.__HandleList({'info' : 'Edited variable %s' % results[0].name})
 
