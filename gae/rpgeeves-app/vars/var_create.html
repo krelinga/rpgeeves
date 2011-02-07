@@ -1,16 +1,20 @@
 <html>
 <head>
-  <title>New Variable</title>
+  <title>{{ show_action }} Variable</title>
 </head>
 <body>
-  <form action="/vars" method="get">
+  {% include "var_status.html" %}
+  <form action="/vars" method="post">
     <div>Name:</div>
-    <input type="text" name="action" value="new_submit" style="display:none" />
-    <input type="text" name="name" value="" />
+    <input type="text" name="action" value="{{ action }}" style="display:none" />
+    {% if original_name %}
+    <input type="text" name="original_name" value="{{ original_name }}" style="display:none" \>
+    {% endif %}
+    <input type="text" name="name" value="{{ name }}" />
     <div>Value:</div>
-    <input type="text" name="value" value="" />
+    <input type="text" name="value" value="{{ value }}" />
     <div></div>
-    <input type="submit" value="Create!" />
+    <input type="submit" value="{{ show_action }}!" />
   </form>
 </body>
 </html>

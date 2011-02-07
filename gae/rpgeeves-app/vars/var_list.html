@@ -3,7 +3,8 @@
     <title>Variables</title>
   </head>
 <body>
-  <a href="/vars?action=new">New</a>
+  {% include "var_status.html" %}
+  <a href="/vars?action=create">New</a>
   <table>
     <th>
       <td>Name</td>
@@ -11,7 +12,7 @@
     </th>
     {% for var in vars %}
     <tr>
-      <td><a href="/vars?action=edit&var={{var.name}}">edit</a></td>
+      <td><a href="/vars?action=edit&name={{var.name}}">edit</a></td>
       <td>{{var.name}}</td>
       <td>{{var.value}}</td>
     </tr>
