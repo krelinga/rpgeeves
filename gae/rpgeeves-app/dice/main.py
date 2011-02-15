@@ -40,6 +40,12 @@ class DiceHandler(webapp.RequestHandler):
     except expander.UnknownVariableException, e:
       raise DiceHandler.Exception(str(e))
 
+  def __EvaluateExpression(self, to_evaluate):
+    try:
+      return expression.Evaluator().Evaluate(to_evaluate)
+    except expression.ParseError, e:
+      raise DiceHandler.Exception(str(e))
+
   def get(self):
     d = self.request.get('d').encode('ascii')
     tpl_dict = {'d' : d}
@@ -50,7 +56,7 @@ class DiceHandler(webapp.RequestHandler):
 
     try:
       inlined = self.__ExpandVars(d).encode('ascii')
-      entries = expression.Evaluator().Evaluate(inlined)
+      entries = self.__EvaluateExpression(inlined)
       tpl_dict['total']  = sum([int(x) for x in entries])
       tpl_dict['entries'] = [self.__EntryHtml(x) for x in entries]
     except DiceHandler.Exception, e:
