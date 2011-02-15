@@ -39,11 +39,6 @@ class ParseError(StandardError):
     StandardError.__init__(self, str)
 
 
-
-
-
-
-
 class ColorSpec:
   class __Range:
     def __init__(self, start, end, color):
