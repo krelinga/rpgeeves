@@ -2,6 +2,9 @@
 
 import re
 
+from store import DiceVar
+from store import User
+
 def RequiresExpansion(expression):
   return '$' in expression
 
@@ -18,3 +21,18 @@ class Expander:
         result = self.__lookup_fn(var)
         expression = expression.replace('$%s' % var, result)
     return expression
+
+
+class UnknownVariableException(Exception):
+  def __init__(self, variable):
+    Exception.__init__(self, 'Unknown variable %s' % variable)
+
+
+def ExpandFromStore(variable, user):
+  query = DiceVar.all()
+  query.filter('owner =', user)
+  query.filter('name =', variable)
+  results = query.fetch(1)
+  if len(results) == 0:
+    raise UnknownVariableException(variable)
+  return results[0].value
