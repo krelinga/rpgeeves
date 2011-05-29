@@ -71,7 +71,8 @@ function parseDiceExpression(expression) {
   $.each(matchArray, function(key, value) {
     var diceMatches = diceRe.exec(value)
     // TODO(krelinga): check that the match actually takes
-    // TODO(krelinga): check that we don't have negative sides (or maybe this is impossible)
+    // TODO(krelinga): check that we don't have negative sides (or maybe this
+    // is impossible)
     var subexpression = {
       sign: diceMatches[1],
       count: diceMatches[2],
@@ -100,18 +101,18 @@ function parseDiceExpression(expression) {
 function rollDice(expressions) {
   var rollArray = []
   $.each(expressions, function(_, expression) {
+    var multiple = 1
+    if (expression.sign == '-') {
+      multiple = -1
+    }
     if (expression.d == '') {
       // This is a constant value.
       rollArray.push({
         sides: null,
-        value: expression.sides,
+        value: expression.sides * multiple,
       })
     } else {
       for (var i = 0; i < expression.count; ++i) {
-        var multiple = 1
-        if (expression.sign == '-') {
-          multiple = -1
-        }
         rollArray.push({
           sides: expression.sides,
           value: multiple * rollOneDie(expression.sides),
@@ -122,17 +123,49 @@ function rollDice(expressions) {
   return rollArray
 }
 
-function setResult(expression) {
-  parsed = parseDiceExpression(expression)
-  if (parsed.error != null) {
-    $("#result_div").html("<font color='red'>" + parsed.error + "</font>")
-  } else {
-    $("#result_div").text(sumRolls(rollDice(parsed.subexpressions)))
+function rollValueToString(roll) {
+  var parts = []
+  if (roll.value >= 0 ) {
+    parts.push("+")
   }
+
+  parts.push(roll.value)
+
+  if (roll.sides != null) {
+    if (roll.value >= 0) {
+      parts.push(" (+d")
+    } else {
+      parts.push(" (-d")
+    }
+    parts.push(roll.sides)
+    parts.push(")")
+  }
+
+  return parts.join("")
 }
 
-function sumRolls(subexpressions) {
-  rolls = rollDice(parsed.subexpressions)
+function setResult(expression) {
+  var parsed = parseDiceExpression(expression)
+  var parts = []
+  if (parsed.error != null) {
+    parts.push("<font color='red'>")
+    parts.push(parsed.error)
+    parts.push("</font>")
+  } else {
+    var rolls = rollDice(parsed.subexpressions)
+    parts.push("<div>")
+    parts.push(sumRolls(rolls))
+    parts.push("</div>")
+    $.each(rolls, function(_, roll) {
+      parts.push("<div style='text-indent: 10px;'>")
+      parts.push(rollValueToString(roll))
+      parts.push("</div>")
+    })
+  }
+  $("#result_div").html(parts.join(""))
+}
+
+function sumRolls(rolls) {
   var sum = 0
   $.each(rolls, function(_, roll) {
     sum += roll.value
@@ -149,17 +182,5 @@ $(document).ready(function() {
       $("#expression_submit").click()
     }
   })
+  $("#expression").focus()
 })
-
-parsed = parseDiceExpression("3d20 + 1 + d30 + 12 - 10d20  ")
-if (parsed.error != null) {
-  alert('error: ' + parsed.error)
-} else {
-  parsedExpressionToConsole(parsed)
-  rolls = rollDice(parsed.subexpressions)
-  var sum = 0
-  $.each(rolls, function(_, roll) {
-    sum += roll.value
-  })
-  rollsToConsole(rolls, sum)
-}
