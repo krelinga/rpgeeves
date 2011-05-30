@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>ParseTree Test</title>
+    <!-- library files -->
+    <link rel="stylesheet" type="text/css" href="../thirdparty/jasmine/jasmine.css">
+  
+    <script type="text/javascript" src="../thirdparty/jasmine/jasmine.js"></script>
+    <script type="text/javascript" src="../thirdparty/jasmine/jasmine-html.js"></script>
+
+    <!-- file under test -->
+    <script type="text/javascript" src="parsetree.js"></script>
+
+    <!-- test code -->
+    <script type="text/javascript" src="parsetree_test.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+      jasmine.getEnv().execute();
+    </script>
+  </body>
+</html>
