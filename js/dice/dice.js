@@ -110,3 +110,24 @@ rpgeeves.dice.sumRolls = function(rolls) {
   })
   return sum
 }
+
+rpgeeves.dice.rollValueToString = function(roll) {
+  var parts = []
+  if (roll.value >= 0 ) {
+    parts.push("+")
+  }
+
+  parts.push(roll.value)
+
+  if (roll.sides != null) {
+    if (roll.value >= 0) {
+      parts.push(" (+d")
+    } else {
+      parts.push(" (-d")
+    }
+    parts.push(roll.sides)
+    parts.push(")")
+  }
+
+  return parts.join("")
+}

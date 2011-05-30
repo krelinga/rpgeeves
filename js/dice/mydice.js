@@ -1,24 +1,3 @@
-function rollValueToString(roll) {
-  var parts = []
-  if (roll.value >= 0 ) {
-    parts.push("+")
-  }
-
-  parts.push(roll.value)
-
-  if (roll.sides != null) {
-    if (roll.value >= 0) {
-      parts.push(" (+d")
-    } else {
-      parts.push(" (-d")
-    }
-    parts.push(roll.sides)
-    parts.push(")")
-  }
-
-  return parts.join("")
-}
-
 function setResult(expression) {
   var parsed = rpgeeves.dice.parseDiceExpression(expression)
   var parts = []
@@ -33,7 +12,7 @@ function setResult(expression) {
     parts.push("</div>")
     $.each(rolls, function(_, roll) {
       parts.push("<div style='text-indent: 10px;'>")
-      parts.push(rollValueToString(roll))
+      parts.push(rpgeeves.dice.rollValueToString(roll))
       parts.push("</div>")
     })
   }
