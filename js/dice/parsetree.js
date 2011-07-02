@@ -284,9 +284,9 @@ function DiceResult(sides, result) {
 DiceResult.prototype.toString = function() {
   var parts = []
   parts.push(this.result)
-  parts.push(" (d")
+  parts.push(" [d")
   parts.push(this.sides)
-  parts.push(")")
+  parts.push("]")
   return parts.join("")
 }
 DiceResult.prototype.total = function() {
