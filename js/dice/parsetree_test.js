@@ -192,7 +192,7 @@ describe("NamedResult", function() {
   var result = new NamedResult(new ConstantResult(12), "test")
 
   it("should have a working toString()", function() {
-    expect(result.toString()).toEqual("12 [test]")
+    expect(result.toString()).toEqual("(12) [test]")
   })
 
   it("should have a working total()", function() {
@@ -237,7 +237,7 @@ describe("SumResult", function() {
   var result = new SumResult(children)
 
   it("should have a working toString()", function() {
-    var expected = "10 - 20 + 50 [foo] - 8 [d10] + (-30 + 40)"
+    var expected = "10 - 20 + (50) [foo] - 8 [d10] + (-30 + 40)"
     expect(result.toString()).toEqual(expected)
   })
 

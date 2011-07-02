@@ -300,8 +300,9 @@ function NamedResult(child, name) {
 }
 NamedResult.prototype.toString = function() {
   var parts = []
+  parts.push("(")
   parts.push(this.child.toString())
-  parts.push(" [")
+  parts.push(") [")
   parts.push(this.name)
   parts.push("]")
   return parts.join("")
