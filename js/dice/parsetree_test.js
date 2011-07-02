@@ -378,4 +378,25 @@ describe("parse", function() {
     }
     expect(fn).toThrow("Syntax error after: '10 '")
   })
+
+  it("should give parse error on dice expression with zero sides", function() {
+    var fn1 = function() {
+      parse("d0")
+    }
+    var fn2 = function() {
+      parse("1d0")
+    }
+    expect(fn1).toThrow("Syntax error: dice expression with 0 sides near: 'd0'")
+    expect(fn2).toThrow(
+        "Syntax error: dice expression with 0 sides near: '1d0'")
+
+  })
+
+  it("should give parse error on dice expression with zero count", function() {
+    var fn = function() {
+      parse("0d20")
+    }
+    expect(fn).toThrow(
+        "Syntax error: dice expression with 0 count near: '0d20'")
+  })
 })

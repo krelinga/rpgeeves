@@ -362,11 +362,30 @@ function parse(stringExpression) {
     } else {
       // If we get here then it looks like there isn't a syntax error.
       var newChild = null
+      var safeNewDiceExpression = function(count, sides) {
+        if (sides == 0) {
+          var parts = []
+          parts.push("Syntax error: dice expression with 0 sides near: '")
+          parts.push(match[0])
+          parts.push("'")
+          throw parts.join("")
+        }
+        if (count == 0) {
+          var parts = []
+          parts.push("Syntax error: dice expression with 0 count near: '")
+          parts.push(match[0])
+          parts.push("'")
+          throw parts.join("")
+        }
+
+        return new DiceExpression(count, sides)
+      }
       if (match[2]) {
         if (match[3]) {
-          newChild = new DiceExpression(parseInt(match[3]), parseInt(match[4]))
+          newChild = safeNewDiceExpression(parseInt(match[3]),
+                                           parseInt(match[4]))
         } else {
-          newChild = new DiceExpression(1, parseInt(match[4]))
+          newChild = safeNewDiceExpression(1, parseInt(match[4]))
         }
       } else if (match[5]) {
         newChild = new ConstantExpression(parseInt(match[5]))
