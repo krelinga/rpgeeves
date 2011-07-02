@@ -185,6 +185,7 @@ NamedExpression.prototype.serialize = function() {
 }
 
 // class ParenExpression
+// TODO(krelinga): consider deleting -- unused in actual parsing.
 function ParenExpression(child) {
   this.child = child
 }
