@@ -1,20 +1,22 @@
+symbolTable = {
+  "foo": parse("d20 + 2d10 + 1 - 3")
+}
+
 function setResult(expression) {
-  var parsed = rpgeeves.dice.parseDiceExpression(expression)
   var parts = []
-  if (parsed.error != null) {
-    parts.push("<font color='red'>")
-    parts.push(parsed.error)
-    parts.push("</font>")
-  } else {
-    var rolls = rpgeeves.dice.rollDice(parsed.subexpressions)
+  try {
+    var parsed = parse(expression)
+    var result = parsed.roll(symbolTable, roll)
     parts.push("<div>")
-    parts.push(rpgeeves.dice.sumRolls(rolls))
+    parts.push(result.total())
     parts.push("</div>")
-    $.each(rolls, function(_, roll) {
-      parts.push("<div style='text-indent: 10px;'>")
-      parts.push(rpgeeves.dice.rollValueToString(roll))
-      parts.push("</div>")
-    })
+    parts.push("<div>")
+    parts.push(result.toString())
+    parts.push("</div>")
+  } catch (error) {
+    parts.push("<font color='red'>")
+    parts.push(error)
+    parts.push("</font>")
   }
   $("#result_div").html(parts.join(""))
 }
