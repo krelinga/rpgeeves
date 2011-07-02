@@ -167,7 +167,7 @@ NamedExpression.prototype.roll = function(symbolTable, roller) {
   if (!found) {
     throw "unknown name: " + this.name
   }
-  return new NamedResult(found, this.name)
+  return new NamedResult(found.roll(symbolTable, roller), this.name)
 }
 NamedExpression.prototype.debugString = function() {
   var parts = []
@@ -382,4 +382,8 @@ function parse(stringExpression) {
     }
   }
   return new SumExpression(children)
+}
+
+function roll(sides) {
+  return Math.floor(1 + sides * Math.random())
 }
