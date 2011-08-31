@@ -12,3 +12,7 @@ It also isn't clear how we should handle user identifiers.  My first thought was
 I wonder if it makes more sense to just generate some hard-to-guess identifier per-user on the server-side, and rely on folks using this code to be able to keep track of this user identifier.  The up-side is that it doesn't require any auth whatsoever.  The down-side is that if anyone guesses this difficult-to-guess ID you're fucked.  For example, intercepting this ID via unsecured wifi would be trivial.
 
 I should look into how other products handle this ... it has to be a solved problem.  Probably something involving https.
+
+END GOAL:
+---------
+I need to ship a first version which demonstrates (1) and (2).  This doesn't have to do anything particularly useful (i.e. I don't want to spend a lot of time writing the tech demo).  However, it should be compelling enough to get folks even just a tiny bit interested.
