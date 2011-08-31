@@ -1,0 +1,14 @@
+So, the basic idea behind the in-browser stuff is to create a few clean, well-separated components:
+
+1) Dice Expression parsing, parse tree, roll evaluation
+This code can parse a given dice expression into a parse tree, and evaluate the tree to generate a set of dice values for the tree.
+
+2) Persistence
+This code knows how to serialize and deserialize a dice expression parse tree.  It might make more sense to make this a simple key -> value store that holds the string versions of the various dice expressions.
+
+It also isn't clear how we should handle user identifiers.  My first thought was to just use GAE's built-in auth stuff, but that has several unpleasant connotations:
+  - Users will *have* to be signed in to a google account to use it.  This means that anyone hosting the rpgeeves js on some other platform will have to force users to to sign into google as well, or require their account passwords (both of which are sucky options)
+
+I wonder if it makes more sense to just generate some hard-to-guess identifier per-user on the server-side, and rely on folks using this code to be able to keep track of this user identifier.  The up-side is that it doesn't require any auth whatsoever.  The down-side is that if anyone guesses this difficult-to-guess ID you're fucked.  For example, intercepting this ID via unsecured wifi would be trivial.
+
+I should look into how other products handle this ... it has to be a solved problem.  Probably something involving https.
