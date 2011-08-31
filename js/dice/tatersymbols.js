@@ -10,7 +10,7 @@ taterSymbols = {
   // saves
   "fortitude": parse("constitution + 9"),
   "reflex": parse("dexterity + 3"),
-  "will": parse("wisdom + 3),
+  "will": parse("wisdom + 3"),
 
   // Basic attacks
   "base_attack_bonus": new ConstantExpression(11),
@@ -34,7 +34,7 @@ taterSymbols = {
   "disable_device": parse("intelligence"),
   "disguise": parse("charisma"),
   "escape_artist": parse("dexterity"),
-  "forgery": parse("intelligence",
+  "forgery": parse("intelligence"),
   "gather_information": parse("charisma"),
   "handle_animal": parse("charisma"),
   "heal": parse("wisdom"),
@@ -52,7 +52,7 @@ taterSymbols = {
   "ride": parse("dexterity"),
   "search.ranks": new ConstantExpression(2),
   "search": parse("intelligence + search.ranks"),
-  "sense_motive": parse("wisdom),
+  "sense_motive": parse("wisdom"),
   "sleight_of_hand": parse("dexterity"),
   "spellcraft": parse("intelligence"),
   "spot.ranks": new ConstantExpression(1),
@@ -63,7 +63,7 @@ taterSymbols = {
   "swim": parse("strength + swim.ranks"),
   "tumble": parse("dexterity"),
   "use_magic_device": parse("charisma"),
-  "use_rope": parse("dexterity),
+  "use_rope": parse("dexterity"),
   "animal_empathy.ranks": new ConstantExpression(3),
   "animal_empathy": parse("charisma + animal_empathy.ranks")
 }

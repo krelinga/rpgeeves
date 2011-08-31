@@ -334,8 +334,8 @@ function parse(stringExpression) {
   if (stringExpression.length == 0) {
     throw "Syntax error: empty expression"
   }
-  var firstTokenRegex = /\s*(-?)\s*(?:((\d*)\s*d\s*(\d+))|(\d+)|([a-zA-Z0-9.]+))\s*/i
-  var laterTokenRegex = /\s*([-+])\s*(?:((\d*)\s*d\s*(\d+))|(\d+)|([a-zA-Z0-9.]+))\s*/i
+  var firstTokenRegex = /\s*(-?)\s*(?:((\d*)\s*d\s*(\d+))|(\d+)|([a-zA-Z0-9._]+))\s*/i
+  var laterTokenRegex = /\s*([-+])\s*(?:((\d*)\s*d\s*(\d+))|(\d+)|([a-zA-Z0-9._]+))\s*/i
 
   var children = []
   var rawChildren = []
