@@ -20,7 +20,5 @@ api_version: 1
 handlers:
 - url: /dice
   script: dice/main.py
-- url: /vars
-  script: vars/main.py
 - url: .*
   script: main.py
