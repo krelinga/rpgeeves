@@ -30,3 +30,73 @@ I should look into how other products handle this ... it has to be a solved prob
 END GOAL:
 ---------
 I need to ship a first version which demonstrates (1) and (2).  This doesn't have to do anything particularly useful (i.e. I don't want to spend a lot of time writing the tech demo).  However, it should be compelling enough to get folks even just a tiny bit interested.
+
+
+
+Let's back up a minute. The real goal here should be to ship something useful and awesome for the community quickly. It feels like big parts of the code are almost there, or at least good enough to ship. What can I spend less than two weeks doing that will still be useful for the community?  Let's start with an inventory of what I already have written:
+
+- The dice expression parsing and evaluation stuff is definitely good to go. 
+- The autocomplete stuff is in an ok state, but could use some further refinement. Plus it only works in certain ui configurations, might not make sense in what I actually ship
+- the storage API stuff is still very early. This will need lots of additional work before I can ship it. 
+
+So, it sounds like that's a also a rough stack ranking of what is easiest to ship. 
+
+Let's aim to ship the following: 
+1) a web ui that allows users to define a set of named dice rolls, use a auto-completing text box to roll those dice, and with a persistence layer so they can save the rolls between site visits
+2) a github pull request with my repo cleaned of experimental code and containing good examples. 
+
+Another thing to keep in mind is that gae is raising their prices in the short term. Maybe it makes more sense to switch to using php hosted on dreamhost for my frontend?  I examined the new pricing scheme for gae, and I'm not concerned. Were talking about pennies a month (maybe) if I go over the free quota. 
+
+Design for launching first javascript-enabled version
+=====================================================
+keep it simple: divorce editing saved rolls from querying saved rolls.
+
+query page: /js_dice
+  - force login to access this page
+  - inline the contents of the symbol table in the reply before sending from the server (no separate query)
+  - just an auto-complete text-box, no other UI elements
+  - link to the "edit" page
+
+edit page: /js_dice_edit
+  - force login to access this page
+  - inline the contents of the symbol table in the reply before sending from the server (no separate query)
+  - /get to get current status, /post to update
+  - user must click "save" button to do a full upload
+  - all state on the server is replaced by the client's state ... no complicated diffing
+  - ui:
+    - list of rolls sorted in ABC order by name
+    - click "x" button to delete a pre-existing roll, it's contents are greyed out.  unclick "x" to undo
+    - click "+" button to add a new roll
+    - renames are trickier.  On focus exit from text box, need to make sure that no existing roll of the same name is already there.  If so, the text becomes red and bolded to indicate that there is a problem (popup?)
+    - on submit, need to verify that all data is sane
+      - easy to verify no name clashes
+      - harder to verify that all dice expressions make sense (current parsing code is all client-side).  Probaby OK to skip verification for now, so long as the submit button is smart about not letting people submit broken things.
+
+Let's focus the rest of this design on the "edit" page, since I think that's the more-interesting case.
+
+the MVC way:
+  - Model:
+    - a list of named dice expressions
+      - is_deleted?
+      - name
+      - expression
+      - error
+      - registerView(), add a view to be updated when the data changes.
+      - NewExpression(), add a dice expression to the set.
+  - view:
+    - A set of HTML divs, one div per-list item
+    - each Div has the following:
+      - check box for deletion
+      - text box for expression name
+      - text box for expression value
+      - corresponding labels
+      - error text for any bits that are problems
+    - A "submit" button to upload changes to the server
+    - a "Cancel" button, which is really just a way to go back to /js_dice
+
+  - Controller:
+    - When someone clicks on one of the UI elements, we need to plumb the action through to the controller so that it can be handled properly.
+
+Actually, MVC seems like overkill for an application like this.
+
+Probaby easier to just use jquery's callback mechanism to make the right things happen in an underlying list of js classes representing individual data objects.
