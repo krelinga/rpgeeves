@@ -20,9 +20,10 @@ api_version: 1
 handlers:
 - url: /dice
   script: dice/main.py
-- url: /js_dice.*
-  script: js_dice/main.py
 - url: /js_dice_static
   static_dir: js_dice/static
+  mime_type: text/javascript
+- url: /js_dice.*
+  script: js_dice/main.py
 - url: .*
   script: main.py

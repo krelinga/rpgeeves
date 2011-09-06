@@ -19,10 +19,16 @@ limitations under the License.
     <title>Edit Dice</title>
   </head>
   <body>
+    <script type="text/javascript" src="/js_dice_static/jquery.js"></script>
     <!-- a Div to contain the list of dice expressions. -->
     <div id="expression_list"></div>
     <button id="submit_button">Submit</button>
     <button id="cancel_button">Cancel</button>
-    <script type="text/javascript" src="js_dice_static/js_dice_edit.js"></script>
+    <script type="text/javascript">
+      starting_set = {
+        'foo': 'bar'
+      }
+    </script>
+    <script type="text/javascript" src="/js_dice_static/js_dice_edit.js"></script>
   </body>
 </html>
