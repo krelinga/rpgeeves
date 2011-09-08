@@ -2,7 +2,8 @@
 function DiceView(starting_div_id, starting_set) {
 
   // Helper function to generate HTML for a named textbox within a form.
-  function htmlTextboxWithId(id, name, defaultValue) {
+  function htmlTextboxWithId(id, name, defaultValue, textbox_class_name,
+                             error_class_name) {
     var parts = []
     parts.push('<label for="')
     parts.push(id)
@@ -14,7 +15,11 @@ function DiceView(starting_div_id, starting_set) {
     parts.push(id)
     parts.push('" value="')
     parts.push(defaultValue)
-    parts.push('" class="textbox" /><br />')
+    parts.push('" class="')
+    parts.push(textbox_class_name)
+    parts.push('" /><span style="color:red;" class="')
+    parts.push(error_class_name)
+    parts.push('"></span><br />')
     return parts.join('')
   }
 
@@ -53,11 +58,13 @@ function DiceView(starting_div_id, starting_set) {
 
     // Set up a text box for the name of the expression
     parts.push(htmlTextboxWithId(['expression_name_', expressionId].join(''),
-                                 'Name', name))
+                                 'Name', name, 'expression_name',
+				 'expression_name_error'))
 
     // Set up a text box for the value of the expression
     parts.push(htmlTextboxWithId(['expression_value_', expressionId].join(''),
-                                 'Value', expression))
+                                 'Value', expression, 'expression_value',
+				 'expression_value_error'))
 
     parts.push('</form>')
 
@@ -68,10 +75,39 @@ function DiceView(starting_div_id, starting_set) {
   $('form > input.expression_deleted').click(function() {
     if ($(this).prop('checked')) {
       // Freeze all releated textboxes
-      $(this).parent().children('.textbox').prop('disabled', true)
+      $(this).parent().children('.expression_name').prop('disabled', true)
+      $(this).parent().children('.expression_value').prop('disabled', true)
     } else {
       // Unfreeze all releated textboxes
-      $(this).parent().children('.textbox').prop('disabled', false)
+      $(this).parent().children('.expression_name').prop('disabled', false)
+      $(this).parent().children('.expression_value').prop('disabled', false)
+    }
+  })
+
+  // Add jquery handlers for displaying errors if any element is given the same name as any other element.
+  $('form > input.expression_name').keyup(function() {
+    // Clear any existing errors
+    $('form > .expression_name_error').html('')
+
+    // Gather the values of every other expression.
+    var expression_name_to_element = {}
+    $('form > .expression_name').each(function() {
+      var textbox = $(this)
+      if (expression_name_to_element[textbox.val()]) {
+        expression_name_to_element[textbox.val()].push(textbox)
+      } else {
+        expression_name_to_element[textbox.val()] = [textbox]
+      }
+    })
+
+    // Set any errors for duplicated name.
+    for (key in expression_name_to_element) {
+      if (expression_name_to_element[key].length > 1) {
+        for (inner_key in expression_name_to_element[key]) {
+	  $(expression_name_to_element[key][inner_key]).parent().children(
+	      '.expression_name_error').html('Duplicate Name!')
+	}
+      }
     }
   })
 }
