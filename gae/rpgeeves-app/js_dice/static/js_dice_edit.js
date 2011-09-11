@@ -42,6 +42,7 @@ function DiceView(startingDivId, startingSet) {
     })
 
     $('#submit_error').html('submitting....')
+    // TODO(krelinga): do I need to escape this json before submitting at all?
     $.post("js_dice_edit", $.toJSON(toSubmit))
         .success(function() {
           $('#submit_error').html('')
@@ -184,6 +185,7 @@ DiceView.prototype.newEntry = function(name, value) {
         symbolTable[name] = new ConstantExpression(1)
       })
       var result = tree.roll(symbolTable, roll)
+      // TODO(krelinga): also check for circular dependencies.
     } catch (error) {
       errorSpan.html(error)
     }
