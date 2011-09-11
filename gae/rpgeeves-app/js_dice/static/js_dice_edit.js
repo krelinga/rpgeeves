@@ -1,5 +1,5 @@
 starting_set_json = '{"foo": "d20","bar": "2d10 + 3","baz": "3d4"}'
-starting_set = starting_set_json.parseJSON()
+starting_set = $.evalJSON(starting_set_json)
 
 // class DiceView
 function DiceView(starting_div_id, starting_set) {
@@ -160,7 +160,21 @@ function DiceView(starting_div_id, starting_set) {
         toSubmit[expressionName] = expressionValue
       }
     })
-    $('#would_have_submitted').html(toSubmit.toJSONString())
+
+    $('#submit_error').html('submitting....')
+    $.post("js_dice_edit", $.toJSON(toSubmit))
+        .success(function() {
+          $('#submit_error').html('')
+          window.location.href = 'js_dice'
+        })
+        .error(function() {
+          $('#submit_error').html('Submit failed!  Try again.')
+        })
+  })
+
+  // Add a jquery hander to do cancel.
+  $('#cancel_button').click(function() {
+    window.location.href = 'js_dice'
   })
 }
 
