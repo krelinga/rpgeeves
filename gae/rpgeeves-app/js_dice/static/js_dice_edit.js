@@ -60,12 +60,12 @@ function DiceView(starting_div_id, starting_set) {
       // Set up a text box for the name of the expression
       parts.push(htmlTextboxWithId(['expression_name_', expressionId].join(''),
                                    'Name', name, 'expression_name',
-  				   'expression_name_error'))
+                                   'expression_name_error'))
 
       // Set up a text box for the value of the expression
       parts.push(htmlTextboxWithId(['expression_value_', expressionId].join(''),
                                    'Value', expression, 'expression_value',
-  				   'expression_value_error'))
+                                   'expression_value_error'))
 
       parts.push('</form>')
 
@@ -104,14 +104,14 @@ function DiceView(starting_div_id, starting_set) {
 
     // Set any errors for duplicated name.
     for (key in expression_name_to_element) {
-      if (expression_name_to_element.hasOwnProperty(key) {
+      if (expression_name_to_element.hasOwnProperty(key)) {
         if (expression_name_to_element[key].length > 1) {
           for (inner_key in expression_name_to_element[key]) {
-	    if (expression_name_to_element[key].hasOwnProperty(inner_key) {
+            if (expression_name_to_element[key].hasOwnProperty(inner_key)) {
               $(expression_name_to_element[key][inner_key]).parent().children(
                   '.expression_name_error').html('Duplicate Name!')
             }
-  	  }
+          }
         }
       }
     }
@@ -153,7 +153,7 @@ function DiceView(starting_div_id, starting_set) {
     $('form > input.expression_deleted').each(function() {
       if ($(this).prop('checked') == false) {
         var expressionName = $(this).parent().children('.expression_name').val()
-	var expressionValue = $(this).parent().children('.expression_value').val()
+        var expressionValue = $(this).parent().children('.expression_value').val()
         toSubmit[expressionName] = expressionValue
       }
     })
