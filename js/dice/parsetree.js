@@ -76,6 +76,15 @@ SumExpression.prototype.serialize = function() {
   }
   return toReturn
 }
+SumExpression.prototype.localVariables = function() {
+  var toReturn = {}
+  for (key in this.children) {
+    for (variable in this.children[key].localVariables()) {
+      toReturn[variable] = ''
+    }
+  }
+  return toReturn
+}
 
 // class NegateExpression
 function NegateExpression(child) {
@@ -106,6 +115,9 @@ NegateExpression.prototype.serialize = function() {
   }
   return toReturn
 }
+NegateExpression.prototype.localVariables = function() {
+  return this.child.localVariables()
+}
 
 // class ConstantExpression
 function ConstantExpression(value) {
@@ -130,6 +142,9 @@ ConstantExpression.prototype.serialize = function() {
     "value": String(this.value),
   }
   return toReturn
+}
+ConstantExpression.prototype.localVariables = function() {
+  return {}
 }
 
 // class DiceExpression
@@ -168,8 +183,12 @@ DiceExpression.prototype.serialize = function() {
   }
   return toReturn
 }
+DiceExpression.prototype.localVariables = function() {
+  return {}
+}
 
 // class NamedExpression
+// TODO(krelinga): change this name to something like VariableExpression.
 function NamedExpression(name) {
   this.name = name
 }
@@ -196,6 +215,11 @@ NamedExpression.prototype.serialize = function() {
     "name": this.name,
   }
   return toReturn
+}
+NamedExpression.prototype.localVariables = function() {
+  var tmp = {}
+  tmp[this.name] = ''
+  return tmp
 }
 
 // class ParenExpression
@@ -226,6 +250,9 @@ ParenExpression.prototype.serialize = function() {
     "child": this.child.serialize()
   }
   return toReturn
+}
+ParenExpression.prototype.localVariables = function() {
+  return this.child.localVariables()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

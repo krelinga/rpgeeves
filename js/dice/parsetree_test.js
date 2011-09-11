@@ -31,6 +31,10 @@ describe("ConstantExpression", function() {
   it("should have a working debugString()", function() {
     expect(expression.debugString()).toEqual("ConstantExpression(10)")
   })
+
+  it("should have a working localVariables()", function() {
+    expect(expression.localVariables()).toEqual({})
+  })
 })
 
 describe("DiceExpression", function() {
@@ -54,6 +58,10 @@ describe("DiceExpression", function() {
 
   it("should have a working debugString()", function() {
     expect(expression.debugString()).toEqual("DiceExpression(1, 6)")
+  })
+
+  it("should have a working localVariables()", function() {
+    expect(expression.localVariables()).toEqual({})
   })
 })
 
@@ -82,6 +90,12 @@ describe("NamedExpression", function() {
   it("should have a working debugString()", function() {
     expect(expression.debugString()).toEqual("NamedExpression('somename')")
   })
+
+  it("should have a working localVariables()", function() {
+    var tmp = {}
+    tmp['somename'] = ''
+    expect(expression.localVariables()).toEqual(tmp)
+  })
 })
 
 describe("ParenExpression", function() {
@@ -102,6 +116,10 @@ describe("ParenExpression", function() {
     expect(expression.debugString()).toEqual(
         "ParenExpression(ConstantExpression(10))")
   })
+
+  it("should have a working localVariables()", function() {
+    expect(expression.localVariables()).toEqual({})
+  })
 })
 
 describe("NegateExpression", function() {
@@ -121,6 +139,10 @@ describe("NegateExpression", function() {
   it("should have a working debugString()", function() {
     expect(expression.debugString()).toEqual(
         "NegateExpression(ConstantExpression(10))")
+  })
+
+  it("should have a working localVariables()", function() {
+    expect(expression.localVariables()).toEqual({})
   })
 })
 
@@ -175,6 +197,10 @@ describe("SumExpression", function() {
                 "ConstantExpression(40)" +
             "]))" +
         "])")
+  })
+
+  it("should have a working localVariables()", function() {
+    expect(expression.localVariables()).toEqual({foo: ''})
   })
 })
 
