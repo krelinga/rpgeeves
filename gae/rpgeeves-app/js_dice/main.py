@@ -26,7 +26,10 @@ class JsDiceEditHandler(webapp.RequestHandler):
   def get(self):
     """Create a page to allows users to edit stored sets of dice."""
     tpl_path = os.path.join(os.path.dirname(__file__), 'js_dice_edit.html')
-    self.response.out.write(template.render(tpl_path, {}))
+    tpl_dict = {
+      'starting_set_json': '{"foo": "d20","bar": "2d10 + 3","baz": "3d4"}',
+    }
+    self.response.out.write(template.render(tpl_path, tpl_dict))
 
   def post(self):
     """Accept a user-supplied edit of a stored set of dice."""

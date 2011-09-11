@@ -1,5 +1,4 @@
-starting_set_json = '{"foo": "d20","bar": "2d10 + 3","baz": "3d4"}'
-starting_set = $.evalJSON(starting_set_json)
+starting_set = $.evalJSON(startingSetJson)
 
 // class DiceView
 function DiceView(startingDivId, startingSet) {
