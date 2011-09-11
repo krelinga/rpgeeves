@@ -110,6 +110,22 @@ function DiceView(starting_div_id, starting_set) {
       }
     }
   })
+
+  // Add jquery handlers for displaying parse errors if a dice expression is invalid.
+  $('form > input.expression_value').keyup(function() {
+    // Clear any existing errors
+    var errorSpan = $(this).parent().children('.expression_value_error')
+    errorSpan.html('')
+
+    // Try to parse the current text value.
+    var value = $(this).parent().children('input.expression_value').val()
+    try {
+      var tree = parse(value)
+      
+    } catch (error) {
+      errorSpan.html(error)
+    }
+  })
 }
 
 
