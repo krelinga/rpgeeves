@@ -142,6 +142,10 @@ DiceView.prototype.newEntry = function(name, value) {
     var expression_name_to_element = {}
     startingDiv.find('form > .expression_name').each(function() {
       var textbox = $(this)
+      if (textbox.val().length == 0) {
+        textbox.parent().find('.expression_name_error').html('Empty name!')
+        return
+      }
       if (expression_name_to_element[textbox.val()]) {
         expression_name_to_element[textbox.val()].push(textbox)
       } else {
