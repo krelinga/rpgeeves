@@ -27,19 +27,21 @@ SumExpression.prototype.toString = function() {
   var parts = []
   var first = true
   for (key in this.children) {
-    if (!first) {
-      parts.push(" ")
-    }
-    var childString = this.children[key].toString()
-    if (childString.substr(0, 1) != "-" && !first) {
-      parts.push("+ ")
-    } else if (childString.substr(0, 2) == "- " && first) {
-      parts.push("-")
-      childString = childString.substr(2)
-    }
-    parts.push(childString)
+    if (this.children.hasOwnProperty(key)) {
+      if (!first) {
+        parts.push(" ")
+      }
+      var childString = this.children[key].toString()
+      if (childString.substr(0, 1) != "-" && !first) {
+        parts.push("+ ")
+      } else if (childString.substr(0, 2) == "- " && first) {
+        parts.push("-")
+        childString = childString.substr(2)
+      }
+      parts.push(childString)
 
-    first = false
+      first = false
+    }
   }
 
   return parts.join("")
@@ -47,8 +49,10 @@ SumExpression.prototype.toString = function() {
 SumExpression.prototype.roll = function(symbolTable, roller) {
   var childResults = []
   for (key in this.children) {
-    var child = this.children[key]
-    childResults.push(child.roll(symbolTable, roller))
+    if (this.children.hasOwnProperty(key)) {
+      var child = this.children[key]
+      childResults.push(child.roll(symbolTable, roller))
+    }
   }
   return new SumResult(childResults)
 }
@@ -56,8 +60,10 @@ SumExpression.prototype.debugString = function() {
   var parts = []
   var childParts = []
   for (key in this.children) {
-    var child = this.children[key]
-    childParts.push(child.debugString())
+    if (this.children.hasOwnProperty(key)) {
+      var child = this.children[key]
+      childParts.push(child.debugString())
+    }
   }
   parts.push("SumExpression([")
   parts.push(childParts.join(", "))
@@ -67,8 +73,10 @@ SumExpression.prototype.debugString = function() {
 SumExpression.prototype.serialize = function() {
   var childrenSerialized = []
   for (key in this.children) {
-    var child = this.children[key]
-    childrenSerialized.push(child.serialize())
+    if (this.children.hasOwnProperty(key)) {
+      var child = this.children[key]
+      childrenSerialized.push(child.serialize())
+    }
   }
   var toReturn = {
     "type": "sum",
@@ -79,8 +87,12 @@ SumExpression.prototype.serialize = function() {
 SumExpression.prototype.localVariables = function() {
   var toReturn = {}
   for (key in this.children) {
-    for (variable in this.children[key].localVariables()) {
-      toReturn[variable] = ''
+    if (this.children.hasOwnProperty(key)) {
+      for (variable in this.children[key].localVariables()) {
+        if (this.children.hasOwnProperty(key)) {
+          toReturn[variable] = ''
+	}
+      }
     }
   }
   return toReturn
@@ -267,19 +279,21 @@ SumResult.prototype.toString = function() {
   var parts = []
   var first = true
   for (key in this.children) {
-    if (!first) {
-      parts.push(" ")
-    }
-    var childString = this.children[key].toString()
-    if (childString.substr(0, 1) != "-" && !first) {
-      parts.push("+ ")
-    } else if (childString.substr(0, 2) == "- " && first) {
-      parts.push("-")
-      childString = childString.substr(2)
-    }
-    parts.push(childString)
+    if (this.children.hasOwnProperty(key)) {
+      if (!first) {
+        parts.push(" ")
+      }
+      var childString = this.children[key].toString()
+      if (childString.substr(0, 1) != "-" && !first) {
+        parts.push("+ ")
+      } else if (childString.substr(0, 2) == "- " && first) {
+        parts.push("-")
+        childString = childString.substr(2)
+      }
+      parts.push(childString)
 
-    first = false
+      first = false
+    }
   }
 
   return parts.join("")
@@ -287,8 +301,10 @@ SumResult.prototype.toString = function() {
 SumResult.prototype.total = function() {
   var total = 0
   for (key in this.children) {
-    var child = this.children[key]
-    total += child.total()
+    if (this.children.hasOwnProperty(key)) {
+      var child = this.children[key]
+      total += child.total()
+    }
   }
   return total
 }
