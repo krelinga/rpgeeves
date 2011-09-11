@@ -1,3 +1,6 @@
+starting_set_json = '{"foo": "d20","bar": "2d10 + 3","baz": "3d4"}'
+starting_set = starting_set_json.parseJSON()
+
 // class DiceView
 function DiceView(starting_div_id, starting_set) {
 
