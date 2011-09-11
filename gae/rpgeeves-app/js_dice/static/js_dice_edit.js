@@ -178,7 +178,12 @@ DiceView.prototype.newEntry = function(name, value) {
     var value = $(this).parent().find('input.expression_value').val()
     try {
       var tree = parse(value)
-      
+      var symbolTable = {}
+      $(this).parent().parent().find('form > input.expression_name').each(function() {
+        var name = $(this).val()
+        symbolTable[name] = new ConstantExpression(1)
+      })
+      var result = tree.roll(symbolTable, roll)
     } catch (error) {
       errorSpan.html(error)
     }
